@@ -1,0 +1,113 @@
+/** @format */
+
+.container {
+}
+.nav {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   width: 1200px;
+   margin: 0 auto;
+   height: 84px;
+}
+.nav_left {
+   display: flex;
+   gap: 20px;
+   align-items: center;
+}
+.title {
+   color: #222;
+   font-size: 1.5rem;
+}
+.nav_right {
+   color: #ee4d2d;
+   font-size: 0.875rem;
+   margin-right: 15px;
+   cursor: pointer;
+}
+
+.content_wrap {
+   background-color: rgb(238, 77, 45);
+   padding: 60px 0;
+}
+.content {
+   background-image: url(https://down-vn.img.susercontent.com/file/sg-11134004-7rbn0-lphsre4nskzb8b);
+   background-size: contain;
+   background-repeat: no-repeat;
+   background-position: center center;
+   margin: 0 auto;
+   min-height: 600px;
+   width: 1040px;
+   display: flex;
+   align-items: center;
+   justify-content: flex-end;
+}
+.form {
+   width: 400px;
+   min-height: 460px;
+   background-color: #fff;
+   box-sizing: border-box;
+   box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.14);
+   border-radius: 4px;
+   overflow: hidden;
+   padding: 0 30px;
+}
+.title {
+   max-width: 8.5rem;
+   font-size: 1.25rem;
+   color: #222;
+   padding: 22px 0;
+}
+.input_btn {
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+}
+.input_form {
+   position: relative;
+}
+
+.fg_lg {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 10px 0;
+}
+.forget,
+.login_with_sms {
+   color: #05a;
+   font-size: 12px;
+   cursor: pointer;
+}
+.or {
+   padding-bottom: 14px;
+   display: flex;
+   align-items: center;
+   .brick {
+      height: 1px;
+      width: 100%;
+      background-color: #dbdbdb;
+      flex: 1;
+   }
+   span {
+      color: #ccc;
+      padding: 0 16px;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+   }
+}
+.btn {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+.footer {
+   margin: 30px 0;
+   text-align: center;
+   span {
+      white-space: pre;
+      padding-right: 4px;
+      color: rgba(0, 0, 0, 0.26);
+      font-size: 13px;
+   }
+}

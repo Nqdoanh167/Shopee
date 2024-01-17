@@ -1,0 +1,13 @@
+/** @format */
+
+.input {
+   border-radius: 2px;
+   line-height: normal;
+   padding: 8px 10px;
+   &:hover {
+      border-color: rgb(0, 0, 0, 0.14);
+   }
+   &:focus {
+      border-color: rgb(0, 0, 0, 0.54);
+   }
+}

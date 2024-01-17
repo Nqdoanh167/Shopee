@@ -2,12 +2,11 @@
 
 import React from 'react';
 import {SearchOutlined} from '@ant-design/icons';
-export default function ButtonSearchComponent(style, props) {
-   const {textButton} = props;
+export default function ButtonIconComponent({style, textButton, icon}) {
    return (
       <div
          style={{
-            ...style.style,
+            ...style,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -15,7 +14,7 @@ export default function ButtonSearchComponent(style, props) {
             cursor: 'pointer',
          }}
       >
-         <SearchOutlined style={{color: '#fff', margin: '0'}} />
+         {icon}
          <span style={{fontSize: '14px'}}>{textButton}</span>
       </div>
    );
