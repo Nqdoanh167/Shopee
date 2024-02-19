@@ -8,10 +8,47 @@ import ButtonIconComponent from '../../components/ButtonIconComponent/ButtonIcon
 import face from '../../assets/images/face.png';
 import google from '../../assets/images/google.png';
 import {EyeFilled, EyeInvisibleFilled, Logo} from '../../svg';
-
+import * as UserService from '../../services/UserService';
+import Loading from '../../components/LoadingComponent/Loading';
+import {useNavigate} from 'react-router-dom';
 export default function RegisterPage() {
    const [isShowPassword, setIsShowPassword] = useState(false);
-   const error = false;
+   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+   const [load, setLoad] = useState(false);
+   const navigate = useNavigate();
+   const [user, setUser] = useState({
+      email: '',
+      password: '',
+      confirmPassword: '',
+   });
+   const handleOnChange = (e) => {
+      const {name, value} = e.target;
+      setUser((prevUser) => ({
+         ...prevUser,
+         [name]: value,
+      }));
+   };
+
+   const handleRegister = async () => {
+      if (user?.password !== user?.confirmPassword) alert('Nhập lại mật khẩu không đúng');
+      else {
+         try {
+            setLoad(true);
+            const response = await UserService.registerUser({
+               email: user?.email,
+               password: user?.password,
+            });
+            if (response) {
+               alert('Bạn vui lòng xác thực tài khoản qua email!');
+               navigate('/login');
+            }
+         } catch (error) {
+            alert(error?.response?.data);
+         } finally {
+            setLoad(false);
+         }
+      }
+   };
    return (
       <div className={styles.container}>
          <div className={styles.nav}>
@@ -35,10 +72,12 @@ export default function RegisterPage() {
                   <div className={styles.title}>Đăng ký</div>
                   <div className={styles.input_btn}>
                      <div className={styles.input_form}>
-                        <InputForm placeholder={'Email/Số điện thoại'} />
-                        <span style={{color: error ? '#ee4d2d' : '#fff', fontSize: '13px'}}>
-                           Vui lòng điền vào mục này
-                        </span>
+                        <InputForm
+                           placeholder={'Email/Số điện thoại'}
+                           onChange={handleOnChange}
+                           name='email'
+                           value={user?.email}
+                        />
                      </div>
                      <div className={styles.input_form}>
                         <span>
@@ -66,16 +105,19 @@ export default function RegisterPage() {
                               />
                            )}
                         </span>
-                        <InputForm placeholder={'Mật khẩu'} type={isShowPassword ? 'text' : 'password'} />
-                        <span style={{color: error ? '#ee4d2d' : '#fff', fontSize: '13px'}}>
-                           Vui lòng điền vào mục này
-                        </span>
+                        <InputForm
+                           placeholder={'Mật khẩu'}
+                           type={isShowPassword ? 'text' : 'password'}
+                           onChange={handleOnChange}
+                           name='password'
+                           value={user?.password}
+                        />
                      </div>
                      <div className={styles.input_form}>
                         <span>
-                           {isShowPassword ? (
+                           {isShowConfirmPassword ? (
                               <EyeFilled
-                                 onClick={() => setIsShowPassword(!isShowPassword)}
+                                 onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
                                  style={{
                                     zIndex: 10,
                                     position: 'absolute',
@@ -86,7 +128,7 @@ export default function RegisterPage() {
                               />
                            ) : (
                               <EyeInvisibleFilled
-                                 onClick={() => setIsShowPassword(!isShowPassword)}
+                                 onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
                                  style={{
                                     zIndex: 10,
                                     position: 'absolute',
@@ -97,22 +139,29 @@ export default function RegisterPage() {
                               />
                            )}
                         </span>
-                        <InputForm placeholder={'Nhập lại mật khẩu'} type={isShowPassword ? 'text' : 'password'} />
-                        <span style={{color: error ? '#ee4d2d' : '#fff', fontSize: '13px'}}>
-                           Vui lòng điền vào mục này
-                        </span>
+                        <InputForm
+                           placeholder={'Nhập lại mật khẩu'}
+                           type={isShowConfirmPassword ? 'text' : 'password'}
+                           onChange={handleOnChange}
+                           name='confirmPassword'
+                           value={user?.confirmPassword}
+                        />
                      </div>
-                     <ButtonComponent
-                        textButton={'ĐĂNG KÝ'}
-                        styleTextButton={{
-                           color: '#fff',
-                        }}
-                        styleButton={{
-                           height: '40px',
-                           backgroundColor: '#ee4d2d',
-                        }}
-                        disabled
-                     />
+                     <Loading isLoading={load}>
+                        <ButtonComponent
+                           textButton={'ĐĂNG KÝ'}
+                           styleTextButton={{
+                              color: '#fff',
+                           }}
+                           styleButton={{
+                              width: '100%',
+                              height: '40px',
+                              backgroundColor: '#ee4d2d',
+                           }}
+                           disabled={!user?.email || !user?.password || !user?.confirmPassword}
+                           onClick={handleRegister}
+                        />
+                     </Loading>
                   </div>
 
                   <div className={styles.or}>

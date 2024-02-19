@@ -1,0 +1,19 @@
+/** @format */
+.wrap {
+   background-color: #f5f5f5;
+}
+.container {
+   margin: 0 auto;
+   width: 1200px;
+   display: flex;
+   height: calc(100vh - 98px);
+}
+.filter {
+   width: 200px;
+   margin-top: 20px;
+}
+.content {
+   padding: 5px;
+   margin-top: 20px;
+   width: 100%;
+}

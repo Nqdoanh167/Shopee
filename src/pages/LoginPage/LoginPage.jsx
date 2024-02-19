@@ -8,10 +8,55 @@ import ButtonIconComponent from '../../components/ButtonIconComponent/ButtonIcon
 import face from '../../assets/images/face.png';
 import google from '../../assets/images/google.png';
 import {EyeFilled, EyeInvisibleFilled, Logo} from '../../svg';
-
+import * as UserService from '../../services/UserService';
+import {useLocation, useNavigate} from 'react-router-dom';
+import Loading from '../../components/LoadingComponent/Loading';
+import {jwtDecode} from 'jwt-decode';
+import {useDispatch} from 'react-redux';
+import {updateUser} from '../../redux/slides/userSlide';
 export default function LoginPage() {
    const [isShowPassword, setIsShowPassword] = useState(false);
-   const error = false;
+   const [load, setLoad] = useState(false);
+   const navigate = useNavigate();
+   const location = useLocation();
+   const dispatch = useDispatch();
+   const [user, setUser] = useState({
+      email: '',
+      password: '',
+   });
+   const handleOnChange = (e) => {
+      const {name, value} = e.target;
+      setUser((prevUser) => ({
+         ...prevUser,
+         [name]: value,
+      }));
+   };
+   const handleGetDetailsUser = async (id, access_token) => {
+      const res = await UserService.getDetailUser({id, access_token});
+      dispatch(updateUser({...res?.data, access_token: access_token}));
+   };
+   const handleLogin = async () => {
+      try {
+         setLoad(true);
+         const data = await UserService.loginUser(user);
+         if (data?.access_token) {
+            if (location?.state) {
+               navigate(location?.state);
+            } else {
+               navigate('/');
+            }
+            localStorage.setItem('access_token', JSON.stringify(data?.access_token));
+            const decoded = jwtDecode(data?.access_token);
+            if (decoded?.id) {
+               handleGetDetailsUser(decoded?.id, data?.access_token);
+            }
+         }
+      } catch (error) {
+         alert(error?.response?.data);
+      } finally {
+         setLoad(false);
+      }
+   };
    return (
       <div className={styles.container}>
          <div className={styles.nav}>
@@ -35,10 +80,12 @@ export default function LoginPage() {
                   <div className={styles.title}>Đăng nhập</div>
                   <div className={styles.input_btn}>
                      <div className={styles.input_form}>
-                        <InputForm placeholder={'Email/Số điện thoại/Tên đăng nhập'} />
-                        <span style={{color: error ? '#ee4d2d' : '#fff', fontSize: '13px'}}>
-                           Vui lòng điền vào mục này
-                        </span>
+                        <InputForm
+                           placeholder={'Nhập email'}
+                           onChange={handleOnChange}
+                           name='email'
+                           value={user?.email}
+                        />
                      </div>
                      <div className={styles.input_form}>
                         <span>
@@ -66,22 +113,29 @@ export default function LoginPage() {
                               />
                            )}
                         </span>
-                        <InputForm placeholder={'Mật khẩu'} type={isShowPassword ? 'text' : 'password'} />
-                        <span style={{color: error ? '#ee4d2d' : '#fff', fontSize: '13px'}}>
-                           Vui lòng điền vào mục này
-                        </span>
+                        <InputForm
+                           placeholder={'Mật khẩu'}
+                           type={isShowPassword ? 'text' : 'password'}
+                           onChange={handleOnChange}
+                           name='password'
+                           value={user?.password}
+                        />
                      </div>
-                     <ButtonComponent
-                        textButton={'ĐĂNG NHẬP'}
-                        styleTextButton={{
-                           color: '#fff',
-                        }}
-                        styleButton={{
-                           height: '40px',
-                           backgroundColor: '#ee4d2d',
-                        }}
-                        disabled
-                     />
+                     <Loading isLoading={load}>
+                        <ButtonComponent
+                           textButton={'ĐĂNG NHẬP'}
+                           styleTextButton={{
+                              color: '#fff',
+                           }}
+                           styleButton={{
+                              width: '100%',
+                              height: '40px',
+                              backgroundColor: '#ee4d2d',
+                           }}
+                           disabled={!user?.email || !user?.password}
+                           onClick={handleLogin}
+                        />
+                     </Loading>
                   </div>
                   <div className={styles.fg_lg}>
                      <div className={styles.forget}>Quên mật khẩu</div>
@@ -115,7 +169,10 @@ export default function LoginPage() {
 
                   <div className={styles.footer}>
                      <span>
-                        Bạn mới biết đến Shopee? <span style={{color: 'red', cursor: 'pointer'}}>Đăng ký</span>
+                        Bạn mới biết đến Shopee?{' '}
+                        <span style={{color: 'red', cursor: 'pointer'}} onClick={() => navigate('/register')}>
+                           Đăng ký
+                        </span>
                      </span>
                   </div>
                </div>

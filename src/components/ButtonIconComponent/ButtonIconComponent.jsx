@@ -1,21 +1,16 @@
 /** @format */
 
 import React from 'react';
-import {SearchOutlined} from '@ant-design/icons';
-export default function ButtonIconComponent({style, textButton, icon}) {
+import styles from './ButtonIconComponent.module.scss';
+export default function ButtonIconComponent({style, textButton, icon, styleTextButton, onClick, disabled}) {
    return (
       <div
-         style={{
-            ...style,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '5px',
-            cursor: 'pointer',
-         }}
+         className={styles.btn_icon}
+         style={{...style, cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? '0.7' : '1'}}
+         onClick={onClick}
       >
          {icon}
-         <span style={{fontSize: '14px'}}>{textButton}</span>
+         <span style={styleTextButton}>{textButton}</span>
       </div>
    );
 }

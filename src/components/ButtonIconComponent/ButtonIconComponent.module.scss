@@ -1,0 +1,13 @@
+/** @format */
+
+.btn_icon {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 5px;
+   cursor: pointer;
+   &:hover {
+      color: #fff !important;
+      opacity: 0.8;
+   }
+}
